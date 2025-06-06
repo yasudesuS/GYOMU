@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-5 border-bottom">
+    <h1 class="h2">勤怠申請CSVインポート</h1>
+</div>
+
+<div>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary btn-lg m-1" type="submit">アップロード</button>
+    </form>
+</div>
+<script>
+</script>
+
+{% endblock %}

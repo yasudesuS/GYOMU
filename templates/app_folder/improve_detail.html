@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-5 border-bottom">
+    <h1 class="h2">詳細</h1>
+</div>
+
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        <h3>{{ object.requestID }}</h3>
+        <table class="table border">
+            <tbody>    
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">提案番号</p></th>
+                    <td scope="col" style="width:90%;"><p class="prewrap">{{ object.imp_no }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">氏名</p></th>
+                    <td scope="col" style="width:90%;" class="border">{{ object.emp_mei }}</td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary text-center"><p class="text-center">日時</p></th>
+                    <td scope="col" style="width:90%;" class="border">{{ object.ReqDate }}</td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">カテゴリー</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.kbn_id }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">タイトル</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.ttl }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">内容</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.content }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">回答者</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.ans_mei }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">回答</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.answer }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">重要度</p></th>
+                    <td scope="col" style="width:90%;" class="border">
+                        {% if object.Importance == 1 %}
+                        低
+                        {% elif object.Importance == 2 %}
+                        中
+                        {% elif object.Importance == 3 %}
+                        高
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">優先度</p></th>
+                    <td scope="col" style="width:90%;" class="border">
+                        {% if object.priority == 1 %}
+                        低
+                        {% elif object.priority == 2 %}
+                        中
+                        {% elif object.priority == 3 %}
+                        高
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if object.attach  %}
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">添付ファイル</p></th>
+                    <td scope="col" style="width:90%;">
+                        <a href={{ object.attach.url }} >{{ object.attach }}</a>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>    
+        </table>    
+        <a href="{% url 'app_folder:improve_update2' object.pk %}" class="btn btn-primary btn-lg m-1" id="update1">修正</a>
+        <a href="{% url 'app_folder:improve_update1' object.pk %}" class="btn btn-primary btn-lg m-1" id="update2">回答</a>
+    </form>
+</div>
+<script>
+</script>
+
+{% endblock %}

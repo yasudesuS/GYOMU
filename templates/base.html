@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://cccabinet.jpn.org/bootstrap4/css/style.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type='text/css' href="{% static 'css/style.css'%}">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+      <title> {{ COMPANY_NAME }} </title>
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+  <body>
+    <!-- ↓↓１番上のナビゲーションバー↓↓ -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <nav class="navbar navbar-expand-lg navbar-dark fixed-top  bs-navbar">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="/app_folder/top_page">{{ COMPANY_NAME }}</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                  {% if user.is_authenticated %}
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      掲示板
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/app_folder/top_page">掲示板</a></li>
+                      {% if user.id != EMP_ID %}
+                      <li><a class="dropdown-item" href='/app_folder/info_create/'>掲示板入力</a></li>
+                      {% endif %}
+                    </ul>
+                  </li>
+                  {% if user.id != EMP_ID %}
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      入力
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/app_folder/request_create/">申請</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/offday_create/">勤怠</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/import_offday_csv/">勤怠CSV</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      申請一覧
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/app_folder/request_list/">申請</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/offday_list/">勤怠</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      申請検索
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/app_folder/request_list2/">申請</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/offday_list2/">勤怠</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      承認一覧
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/app_folder/approval_list/">申請</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/ap_offday_list/">勤怠</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/bulk_update_offday2/">勤怠一括更新</a></li>
+                    </ul>
+                  </li>
+                  {% if user.is_superuser %}
+                  <li class="nav-item dropdown"  id="last_ap_nav">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      最終承認一覧
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/app_folder/last_approval_list">申請</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/ls_offday_list/">勤怠</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/bulk_update_offday/">勤怠一括更新</a></li>
+                    </ul>
+                  </li>
+                  {% endif %}
+                  {% endif %}
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      スケジュール
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/app_folder/calendar">会社カレンダー</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/meetingroom/">応接室</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/diningroom/">食堂</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      改善提案
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/app_folder/kaizen">入力</a></li>
+                      {% if user.id != EMP_ID %}
+                      <li><a class="dropdown-item" href="/app_folder/improve_list2">検索</a></li>
+                      {% endif %}
+                      <li><a class="dropdown-item" href="/app_folder/iken">社長宛意見箱</a></li>
+                    </ul>
+                  </li>
+                  {% if user.is_staff %}
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      事務検索
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li  id ="kintai_seach_nav"><a class="dropdown-item" href="/app_folder/offday_list3/">勤怠検索</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/request_list3/">申請検索</a></li>
+                    </ul>
+                  </li>
+                  {% endif %}
+                  <li class="nav-item"><a class="nav-link" href="{% url 'app_folder:logout' %}" >ログアウト</a></li>
+                  <li class="nav-item"><a class="nav-link" >ユーザー：{{ user.first_name }}</a></li>
+                  {% else %}
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      メニュー
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="/app_folder/kaizen">改善提案</a></li>
+                      <li><a class="dropdown-item" href="/app_folder/iken">社長宛意見箱</a></li>
+                    </ul>
+                  </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="content" class="container-fluid">
+      <div class="row flex-xl-nowrap">
+
+        <!-- ↓↓コンテンツ本体↓↓ -->
+        <div class="col-12">
+          {% block contents %}
+          {% endblock %}
+        </div>
+        <!-- ↑↑コンテンツ本体ここまで↑↑ -->
+      </div>
+    </div>
+    </div>
+  </body>
+</html>
+
+<!-- サイドバーに使用しているアイコン -->
+<!-- 使用できるアイコンの一覧： https://voyager-jp.com/blog/javascript/feather/ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+<script>feather.replace()</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+});
+</script>

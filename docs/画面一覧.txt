@@ -1,0 +1,90 @@
+================================================================================
+                            アプリケーション画面一覧
+                      （base.htmlのナビゲーション構造に基づく）
+================================================================================
+
+【掲示板】
+1. 掲示板                         /top_page/
+   - 掲示板詳細                   /info_detail/<uuid:pk>
+     - 掲示板更新                 /info_update/<uuid:pk>
+     - 掲示板削除                 /info_delete/<uuid:pk>
+     - 掲示板確認                 /info_confirm/<uuid:if_id>
+2. 掲示板入力                     /info_create/
+
+【入力】
+3. 申請                          /request_create/
+4. 勤怠                          /offday_create/
+5. 勤怠CSV                       /import_offday_csv/
+
+【申請一覧】
+6. 申請                          /request_list/
+   - 申請詳細                     /request_detail/<uuid:pk>
+     - 申請更新                   /request_update/<uuid:pk>
+     - 申請削除                   /request_delete/<uuid:pk>
+7. 勤怠                          /offday_list/
+   - 勤怠詳細                     /offday_detail/<uuid:pk>
+     - 勤怠削除                   /offday_delete/<uuid:pk>
+
+【申請検索】
+8. 申請                          /request_list2/
+   - 申請詳細                     /request_detail/<uuid:pk>
+     - 申請更新                   /request_update/<uuid:pk>
+     - 申請削除                   /request_delete/<uuid:pk>
+9. 勤怠                          /offday_list2/
+   - 勤怠詳細                     /offday_detail/<uuid:pk>
+     - 勤怠削除                   /offday_delete/<uuid:pk>
+
+【承認一覧】
+10. 申請                         /approval_list/
+    - 承認詳細                   /approval_detail/<uuid:pk>
+      - 承認更新                 /approval_update/<uuid:pk>
+11. 勤怠                         /ap_offday_list/
+    - 勤怠承認更新               /ap_offday_update/<uuid:pk>
+12. 勤怠一括更新                  /bulk_update_offday2/
+
+【最終承認一覧】（スーパーユーザーのみ）
+13. 申請                         /last_approval_list/
+    - 最終承認詳細               /last_approval_detail/<uuid:pk>
+      - 最終承認更新             /last_approval_update/<uuid:pk>
+14. 勤怠                         /ls_offday_list/
+    - 勤怠最終承認更新           /ls_offday_update/<uuid:pk>
+15. 勤怠一括更新                  /bulk_update_offday/
+
+【スケジュール】
+16. 会社カレンダー                /calendar/
+17. 応接室                       /meetingroom/
+18. 食堂                         /diningroom/
+
+【改善提案】
+19. 入力                         /kaizen/
+20. 一覧                         /improve_list/
+21. 検索                         /improve_list2/
+    - 改善提案詳細               /improve_detail/<uuid:pk>
+      - 改善提案更新（回答用）     /improve_update1/<uuid:pk>
+      - 改善提案更新（編集用）     /improve_update2/<uuid:pk>
+22. 社長宛意見箱                  /iken/
+
+【事務検索】（スタッフユーザーのみ）
+23. 勤怠検索                     /offday_list3/
+    - 勤怠詳細                   /offday_detail/<uuid:pk>
+      - 勤怠削除                 /offday_delete/<uuid:pk>
+24. 申請検索                     /request_list3/
+    - 申請詳細                   /request_detail/<uuid:pk>
+      - 申請更新                 /request_update/<uuid:pk>
+      - 申請削除                 /request_delete/<uuid:pk>
+
+【システム機能】
+25. ログアウト                    /logout/
+
+【その他機能画面】
+26. メッセージ画面                /message/
+
+================================================================================
+                      合計: 26メニュー画面 + 14詳細・操作画面 = 40画面
+================================================================================
+
+【権限別アクセス制限】
+- 従業員ID=20: 入力系機能制限あり
+- スーパーユーザー: 最終承認一覧メニューへのアクセス可能
+- スタッフユーザー: 事務検索メニューへのアクセス可能
+- 未認証ユーザー: 改善提案入力・社長宛意見箱のみアクセス可能 

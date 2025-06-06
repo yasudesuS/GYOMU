@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-5 border-bottom">
+    <h1 class="h2">削除フォーム</h1>
+</div>
+
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        <table class="table border">
+            <tbody>    
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">従業員名</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.emp_id }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">勤怠区分</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.offday_kbn }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">日時</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.offday_date }}{% if object.end_offday_date  %}～{{ object.end_offday_date }}{% endif %}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">期間</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.period_id }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">備考</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.content }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">理由</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.reason }}</p></td>
+                </tr>
+                {% if object.attach  %}
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">添付ファイル</p></th>
+                    <td scope="col" style="width:90%;">
+                        <a href={{ object.attach.url }} >{{ object.attach }}</a>
+                        {% if object.attach2  %}
+                        </br>
+                        <a href={{ object.attach2.url }} >{{ object.attach2 }}</a>
+                        {% endif %}
+                        {% if object.attach3  %}
+                        </br>
+                        <a href={{ object.attach3.url }} >{{ object.attach3 }}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">申請者</p></th>
+                    <td scope="col" style="width:90%;" class="border">{{ object.usermei }}</td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary text-center"><p class="text-center">送信日時</p></th>
+                    <td scope="col" style="width:90%;" class="border">{{ object.ReqDate }}</td>
+                </tr>
+                {% if object.approval_id %}
+                    <tr>
+                        <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">承認者</p></th>
+                        <td scope="col" style="width:90%;">{{ object.apmei }}<label id="approval"></lable></td>
+                    </tr>
+                    {% if object.approval_content  %}
+                        <tr>
+                            <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">承認者コメント</p></th>
+                            <td scope="col" style="width:90%;"><p class="prewrap">{{ object.approval_content }}</p></td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">最終承認者</p></th>
+                    <td scope="col" style="width:90%;">{{ object.lsmei }}<label id="last_approval"></lable></td>
+                </tr>
+                {% if object.last_approval_content  %}
+                    <tr>
+                        <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">最終承認者コメント</p></th>
+                        <td scope="col" style="width:90%;"><p class="prewrap">{{ object.last_approval_content }}</p></td>
+                    </tr>
+                {% endif %}
+                {% if object.ap_no  %}
+                    <tr>
+                        <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">承認番号</p></th>
+                        <td scope="col" style="width:90%;"><p class="prewrap">{{ object.ap_no }}</p></td>
+                    </tr>
+                {% endif %}
+            </tbody>    
+        </table>    
+      <p>削除しますよろしいですか？
+        <button type="submit" class="btn btn-primary btn-lg m-1">削除</button>
+    </form>
+</div>
+<script>
+    function approvalCng() {
+        {% if object.approval_id %}
+        if ({{ object.approval }} == 0) {
+            document.getElementById('approval').innerHTML = "　未承認"
+            document.getElementById('approval').classList.add("text-primary")
+        }else if({{ object.approval }} == 1){
+            document.getElementById('approval').innerHTML = "　承認済"
+            document.getElementById('approval').classList.add("text-success")
+       }else if({{ object.approval }} == 2){
+            document.getElementById('approval').innerHTML = "　却下"
+            document.getElementById('approval').classList.add("text-danger")
+       }
+       {% endif %}
+    }
+    function lastapprovalCng() {
+        if ({{ object.last_approval }} == 0) {
+            document.getElementById('last_approval').innerHTML = "　未承認"
+            document.getElementById('last_approval').classList.add("text-primary")
+        }else if({{ object.last_approval }} == 1){
+            document.getElementById('last_approval').innerHTML = "　承認済"
+            document.getElementById('last_approval').classList.add("text-success")
+        }else if({{ object.last_approval }} == 2){
+            document.getElementById('last_approval').innerHTML = "　却下"
+            document.getElementById('last_approval').classList.add("text-danger")
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        approvalCng();
+        lastapprovalCng();
+    });
+</script>
+
+{% endblock %}

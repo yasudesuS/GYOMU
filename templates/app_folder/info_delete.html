@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-5 border-bottom">
+    <h1 class="h2">掲示板削除フォーム</h1>
+</div>
+
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        <h3>{{ object.title }}</h3>
+        <table class="table border">
+            <tbody>    
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">氏名</p></th>
+                    <td scope="col" style="width:90%;" class="border">{{ object.usermei }}</td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary text-center"><p class="text-center">日時</p></th>
+                    <td scope="col" style="width:90%;" class="border">{{ object.ReqDate }}</td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">内容</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.content }}</p></td>
+                </tr>
+                {% if object.attach  %}
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">添付ファイル</p></th>
+                    <td scope="col" style="width:90%;"><a href={{ object.attach.url }} >{{ object.attach }}</a></td>
+                </tr>
+                {% endif %}
+            </tbody>    
+        </table>    
+      <p>削除しますよろしいですか？
+        <button type="submit" class="btn btn-primary btn-lg m-1">削除</button>
+    </form>
+</div>
+<script>
+</script>
+
+{% endblock %}

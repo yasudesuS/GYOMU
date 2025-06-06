@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center m-1 border-bottom">
+    <h1 class="h2">改善提案EXCEL出力</h1>
+</div>
+<form method="get" action="" class="post-form border rounded p-3" autocomplete="off">
+    <label for="q">検索キーワード:</label>
+    <br>
+    <label for="start_date">開始日 (YYYY-MM-DD):</label>
+    <input type="text" id="start_date" name="start_date" value="{{ start_date }}" class="form-control m-1">
+    <br>
+    <label for="end_date">終了日 (YYYY-MM-DD):</label>
+    <input type="text" id="end_date" name="end_date" value="{{ end_date }}" class="form-control m-1">
+    <br>
+    <label for="kbn">カテゴリー:</label>
+    <select id="kbn" name="kbn" class="form-control m-1">
+        <option value="">--全て--</option>
+        {% for cat in categories %}
+            <option value="{{ cat.pk }}" {% if selected_category|stringformat:"s" == cat.pk|stringformat:"s" %}selected{% endif %}>
+                {{ cat }}
+            </option>
+        {% endfor %}
+    </select>
+    <br>
+    <input type="submit" value="検索" class="btn btn-primary btn-lg m-1">
+    <!-- Excel 出力ボタン: export パラメータを付与 -->
+    <button type="submit" name="export" value="1" class="btn btn-primary btn-lg m-1">Excel出力</button>
+</form>
+<p>検索結果: {{ result_count }} 件</p>
+<script>
+    $(function () {
+        $('#start_date').datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+        $('#end_date').datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type='text/css' href="{% static 'css/style.css'%}">
+    <link rel="stylesheet" href="https://cccabinet.jpn.org/bootstrap4/css/style.css">
+    <script type="text/javascript" src="{% static 'index.js' %}"></script>
+    <title> {{ COMPANY_NAME }} </title>
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+  <body>
+
+{% block contents %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-5 border-bottom">
+    <h1 class="h2">{{ COMPANY_NAME }}</h1>
+</div>
+<div>
+    <form method="POST" class="p-4 m-4 bg-light border border-success rounded form-group">
+        {% csrf_token %}
+        {% for error in form.errors.values %}
+            {{error}}
+        {% endfor %}
+        <label>ユーザーID</label>
+        <input class="form-control" name="username">
+        <label>パスワード</label>
+        <input type="password" class="form-control" name="password">
+        <button type="submit" class="btn btn-success mt-4">ログイン</button>
+    </form>
+</div>
+
+{% endblock %}
+</body>
+</html>
+
+<!-- サイドバーに使用しているアイコン -->
+<!-- 使用できるアイコンの一覧： https://voyager-jp.com/blog/javascript/feather/ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+<script>feather.replace()</script>

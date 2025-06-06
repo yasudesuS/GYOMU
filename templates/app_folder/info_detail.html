@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        <h3>{{ object.title }}</h3>
+        <table class="table border">
+            <tbody>    
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">氏名</p></th>
+                    <td scope="col" style="width:90%;" class="border">{{ object.usermei }}</td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary text-center"><p class="text-center">日時</p></th>
+                    <td scope="col" style="width:90%;" class="border">{{ object.ReqDate }}</td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">内容</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.content }}</p></td>
+                </tr>
+                {% if object.attach  %}
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">添付ファイル</p></th>
+                    <td scope="col" style="width:90%;"><a href={{ object.attach.url }} >{{ object.attach }}</a></td>
+                </tr>
+                {% endif %}
+                {% if object.image  %}
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">画像添付</p></th>
+                    <td scope="col" style="width:90%;"><img src="{{ object.image.url }}" alt="画像" style="max-width: 100%; height: auto;"></td>
+                </tr>
+                {% endif %}
+                {% if object.pdf  %}
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">PDF添付</p></th>
+                    <td scope="col" style="width:90%;">
+                        <a href={{ object.pdf.url }}>{{ object.pdf }}</a>
+                        <div class="mt-2">
+                            <embed src="{{ object.pdf.url }}" type="application/pdf" width="100%" height="400px" />
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>    
+        </table>    
+        <a href="{% url 'app_folder:info_update' object.pk %}" class="btn btn-primary btn-lg m-1" id="update">修正</a>
+        <a href="{% url 'app_folder:info_delete' object.pk %}" class="btn btn-primary btn-lg m-1" id="delete">削除</a>
+        <a href="{% url 'app_folder:info_confirm' object.pk %}" class="btn btn-primary btn-lg m-1" id="confirm">返信</a>
+    </form>
+</div>
+<h5 class="m-2">内容を確認したら返信してください。</h5>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-5 border-bottom">
+    <h1 class="h5">返信内容</h1>
+</div>
+<div class="container-fluid bg-light ">
+    {% for object in info %}
+    {% if user.id != object.if_account_id_id %}
+    <div class="p-1 m-1 row justify-content-start  ms-auto">
+        {% if object.content  %}
+        <div class="col-4 border justify-content-start rounded bg-white"><p class="prewrap">{{ object.content }}</p></div>
+        {% else %}
+        <div class="col-1 justify-content-end align-self-end text-danger fw-bold">確認済</div>
+        {% endif %}
+        <div class="col-4 justify-content-start align-self-end ">{{ object.usermei }}</div>
+    </div>
+    {% else %}
+    <div class="p-1 m-1 row justify-content-end">
+        <div class="col-4 justify-content-end ms-auto align-self-end text-end">{{ object.usermei }}</div>
+        {% if object.content  %}
+        <div class="col-4 border justify-content-end rounded bg-white"><p class="prewrap">{{ object.content }}</p></div>
+        {% else %}
+        <div class="col-1 justify-content-end align-self-end text-danger fw-bold">確認済</div>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+<script>
+function userChk() {
+    {% if user.id != object.if_account_id_id %}
+        document.getElementById('update').style.display = 'none'
+        document.getElementById('delete').style.display = 'none'
+    {% endif %}
+}
+document.addEventListener('DOMContentLoaded', function() {
+    userChk();
+});
+function openPdf(url) {
+    window.open(url, '_blank');
+}
+</script>
+
+{% endblock %}

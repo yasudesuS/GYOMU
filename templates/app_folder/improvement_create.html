@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-5 border-bottom">
+    <h1 class="h2">改善提案フォーム</h1>
+</div>
+
+<div>
+    <form method="POST" class= "form-group m-3" enctype="multipart/form-data"  autocomplete="off">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary btn-lg m-1"type="submit">送信</button>
+    </form>
+</div>
+<script>
+</script>
+
+{% endblock %}

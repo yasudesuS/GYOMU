@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-5 border-bottom">
+    <h1 class="h2">回答フォーム</h1>
+</div>
+
+<div>
+    <form method="POST" class="m-3">
+        {% csrf_token %}
+        <table class="table border">
+            <tbody>    
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">提案番号</p></th>
+                    <td scope="col" style="width:90%;"><p class="prewrap">{{ object.imp_no }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">氏名</p></th>
+                    <td scope="col" style="width:90%;" class="border">{{ object.emp_mei }}</td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary text-center"><p class="text-center">日時</p></th>
+                    <td scope="col" style="width:90%;" class="border">{{ object.ReqDate }}</td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">カテゴリー</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.kbn_id }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">タイトル</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.ttl }}</p></td>
+                </tr>
+                <tr>
+                    <th scope="col" style="width:10%;" class="border table-primary"><p class="text-center">内容</p></th>
+                    <td scope="col" style="width:90%;" class="border"><p class="prewrap">{{ object.content }}</p></td>
+                </tr>
+            </tbody>    
+        </table>    
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-lg m-1">送信</button>
+    </form>
+</div>
+<script>
+</script>
+
+{% endblock %}

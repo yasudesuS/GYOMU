@@ -1,0 +1,207 @@
+================================================================================
+                            データモデル一覧
+================================================================================
+
+【主要データモデル】
+
+1. RequestMst（申請マスタ）
+   - 主キー: requestID (文字列、5桁)
+   - 項目:
+     * RequestType: 申請項目名
+     * needMeeting: 要会議招集フラグ
+     * needRingi: 要稟議書フラグ
+     * chkJimu: 要事務所確認フラグ
+     * del_flg: 削除フラグ
+
+2. RequestData（申請データ）
+   - 主キー: uuid (UUID)
+   - 主要項目:
+     * requestID: 申請項目（RequestMstへの外部キー）
+     * rq_account_id: 申請者（Userへの外部キー）
+     * usermei: 申請者名
+     * user_email: 申請者メールアドレス
+     * ReqDate: 申請日時
+     * content: 申請内容
+     * attach, attach2, attach3: 添付ファイル（3ファイルまで）
+     * approval_id: 承認者ID
+     * approval: 承認状況（0:未承認、1:承認済、2:却下）
+     * approval_content: 承認コメント
+     * last_approval_id: 最終承認者ID
+     * last_approval: 最終承認状況
+     * ap_no: 承認番号
+     * chkJimu: 事務所確認フラグ
+
+3. ApprovalMst（承認者マスタ）
+   - 主キー: userid (Userへの外部キー)
+   - 項目:
+     * umei: 氏名
+     * approval_id: 承認者ID
+     * apmei: 承認者氏名
+     * ap_email: 承認者メールアドレス
+     * last_approval_id: 最終承認者ID
+     * lsmei: 最終承認者氏名
+     * last_email: 最終承認者メールアドレス
+
+4. InfoData（お知らせデータ）
+   - 主キー: uuid (UUID)
+   - 項目:
+     * if_account_id: 作成者（Userへの外部キー）
+     * usermei: 作成者名
+     * title: タイトル
+     * content: 内容
+     * attach: 添付ファイル
+     * image: 画像ファイル
+     * permission: 全従業員閲覧可フラグ
+     * ReqDate: 作成日時
+     * update_at: 更新日時
+
+5. InfoConfirm（お知らせ確認）
+   - 主キー: uuid (UUID)
+   - 項目:
+     * if_id: お知らせID（InfoDataへの外部キー）
+     * if_account_id: 確認者（Userへの外部キー）
+     * usermei: 確認者名
+     * content: 確認コメント
+     * ReqDate: 確認日時
+
+6. OffDayData（勤怠申請データ）
+   - 主キー: uuid (UUID)
+   - 主要項目:
+     * od_account_id: 申請者（Userへの外部キー）
+     * emp_id: 従業員（OffdayRequestMstへの外部キー）
+     * period_id: 期間（PeriodMstへの外部キー）
+     * offday_kbn: 勤怠区分（OffdayKbnMstへの外部キー）
+     * offday_date: 申請日
+     * end_offday_date: 終了日
+     * content: 備考
+     * reason: 理由
+     * approval: 承認状況
+     * last_approval: 最終承認状況
+     * ap_no: 承認番号
+
+7. ImprovementData（改善提案データ）
+   - 主キー: uuid (UUID)
+   - 項目:
+     * emp_id: 提案者（EmployeeMstへの外部キー）
+     * kbn_id: カテゴリ（ImproveKbnMstへの外部キー）
+     * ttl: 題名
+     * content: 内容
+     * answer_id: 回答者ID
+     * answer: 回答内容
+     * Importance: 重要度（0:未設定、1:低、2:中、3:高）
+     * priority: 優先度（0:未設定、1:低、2:中、3:高）
+     * imp_no: 提案番号
+
+================================================================================
+
+【マスタデータ】
+
+8. EmployeeMst（従業員マスタ）
+   - 項目:
+     * emmei: 従業員名
+     * d_id: 部署（DepartmentMstへの外部キー）
+     * email: メールアドレス
+     * del_flg: 削除フラグ
+
+9. DepartmentMst（部署マスタ）
+   - 項目:
+     * dmei: 部署名
+     * del_flg: 削除フラグ
+
+10. OffdayRequestMst（勤怠申請対象者マスタ）
+    - 項目:
+      * u_id: ユーザー（Userへの外部キー）
+      * emmei: 従業員名
+      * del_flg: 削除フラグ
+
+11. PeriodMst（期間マスタ）
+    - 項目:
+      * period: 期間名
+      * del_flg: 削除フラグ
+
+12. OffdayKbnMst（勤怠区分マスタ）
+    - 項目:
+      * kbnmei: 勤怠区分名
+      * del_flg: 削除フラグ
+
+13. ImproveKbnMst（改善提案区分マスタ）
+    - 項目:
+      * kbnmei: カテゴリー名
+      * del_flg: 削除フラグ
+
+================================================================================
+
+【システム管理用テーブル】
+
+14. SeqMst（シーケンスマスタ）
+    - 主キー: uuid (UUID)
+    - 項目:
+      * approval_no: 申請承認番号
+      * offday_ap_no: 勤怠承認番号
+      * imp_no: 改善提案番号
+
+15. SettingMst（設定マスタ）
+    - 主キー: uuid (UUID)
+    - 項目:
+      * host_email: ホストメールアドレス
+      * request_email: 申請承認済宛先
+      * offday_email: 勤怠承認済宛先
+      * opinion_email: 意見箱宛先
+      * ap_digit: 承認番号桁数
+      * ap_str: 申請承認附番
+      * od_str: 勤怠承認附番
+      * imp_str: 改善提案附番
+      * send_pass: 改善提案パスワード
+
+================================================================================
+
+【データモデル関係図】
+
+申請ワークフロー:
+User → RequestData ← RequestMst
+RequestData → ApprovalMst (承認者情報)
+
+勤怠申請ワークフロー:
+User → OffDayData ← OffdayRequestMst
+OffDayData ← PeriodMst
+OffDayData ← OffdayKbnMst
+
+お知らせ機能:
+User → InfoData
+InfoData → InfoConfirm ← User (確認者)
+
+改善提案:
+EmployeeMst → ImprovementData ← ImproveKbnMst
+
+組織構造:
+User → EmployeeMst ← DepartmentMst
+
+================================================================================
+
+【主要なビジネスルール】
+
+■ 承認ワークフロー
+- 申請 → 中間承認 → 最終承認 → 事務チェック
+- 承認状況: 0=未承認、1=承認済、2=却下
+- 承認番号は自動生成（SeqMst使用）
+
+■ 権限管理
+- 従業員ID=20: 特別な制限ユーザー
+- スタッフユーザー: 管理者権限
+- 各申請は申請者本人のみ閲覧・編集可能
+
+■ ファイル管理
+- アップロード先: uploads/年/月/日/
+- 申請・勤怠申請で最大3ファイル添付可能
+- お知らせでファイル・画像添付可能
+
+■ メール通知
+- 申請時、承認時、最終承認時に自動送信
+- 宛先はSettingMstから取得
+- 改善提案、意見箱でもメール送信
+
+■ 削除フラグ
+- 物理削除ではなく論理削除を採用
+- del_flg=Trueで削除扱い
+
+================================================================================ 

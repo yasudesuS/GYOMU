@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-5 border-bottom">
+    <h1 class="h2">勤怠申請フォーム</h1>
+</div>
+
+<div>
+    <form method="POST" class= "form-group m-3" enctype="multipart/form-data"  autocomplete="off">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>打刻忘れ、遅刻、早退の場合、備考欄に時間を記載してください。</p>
+        <button class="btn btn-primary btn-lg m-1"type="submit">送信</button>
+    </form>
+</div>
+<script>
+    $(function () {
+        $('#id_offday_date').datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+        $('#id_end_offday_date').datepicker({
+            dateFormat: 'yy-mm-dd',
+        });
+    });
+</script>
+
+{% endblock %}

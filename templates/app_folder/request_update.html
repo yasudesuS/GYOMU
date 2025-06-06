@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-5 border-bottom">
+    <h1 class="h2">修正フォーム</h1>
+</div>
+
+<div>
+    <p id="errmsg"></p>
+    <p id="errmsg2"></p>
+    <form class="m-3" method="POST" autocomplete="off"  enctype="multipart/form-data">
+        {% csrf_token %}
+        <h3>{{ object.requestID }}</h3>
+        {{ form.as_p }}
+        <div>
+            <img id="img" src="" alt="画像プレビュー" style="width: 400px; height: 400px; object-fit: contain; display: none;" class="m-1">
+            <!-- PDFプレビュー -->
+            <iframe id="pdf-preview" style="width: 100%; height: 500px; display: none;" class="m-1"></iframe>
+            <!-- Excelプレビュー -->
+            <div id="excel-preview" style="width: 100%; height: 500px; overflow: auto; display: none; border: 1px solid #ccc;" class="m-1"></div>
+            <img id="img2" src="" alt="画像プレビュー" style="width: 400px; height: 400px; object-fit: contain; display: none;" class="m-1">
+            <!-- PDFプレビュー -->
+            <iframe id="pdf-preview2" style="width: 100%; height: 500px; display: none;" class="m-1"></iframe>
+            <!-- Excelプレビュー -->
+            <div id="excel-preview2" style="width: 100%; height: 500px; overflow: auto; display: none; border: 1px solid #ccc;" class="m-1"></div>
+            <img id="img3" src="" alt="画像プレビュー" style="width: 400px; height: 400px; object-fit: contain; display: none;" class="m-1">
+            <!-- PDFプレビュー -->
+            <iframe id="pdf-preview3" style="width: 100%; height: 500px; display: none;" class="m-1"></iframe>
+            <!-- Excelプレビュー -->
+            <div id="excel-preview3" style="width: 100%; height: 500px; overflow: auto; display: none; border: 1px solid #ccc;" class="m-1"></div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg m-1">送信</button>
+    </form>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.querySelector("#id_attach");
+        const previewImage = document.querySelector("#img");
+        const previewPDF = document.querySelector("#pdf-preview");
+        const previewExcel = document.querySelector("#excel-preview");
+        const fileInput2 = document.querySelector("#id_attach2");
+        const previewImage2 = document.querySelector("#img2");
+        const previewPDF2 = document.querySelector("#pdf-preview2");
+        const previewExcel2 = document.querySelector("#excel-preview2");
+        const fileInput3 = document.querySelector("#id_attach3");
+        const previewImage3 = document.querySelector("#img3");
+        const previewPDF3 = document.querySelector("#pdf-preview3");
+        const previewExcel3 = document.querySelector("#excel-preview3");
+    
+        if (!fileInput || !previewImage || !previewPDF || !previewExcel ||!fileInput2 || !previewImage2 || !previewPDF2 || !previewExcel2 || !fileInput3 || !previewImage3 || !previewPDF3 || !previewExcel3) return; // 要素が存在しない場合は処理をしない
+    
+        fileInput.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+    
+            // 何も選択されていない場合はすべて非表示
+            if (!file) {
+                previewImage.style.display = "none";
+                previewPDF.style.display = "none";
+                previewExcel.style.display = "none";
+                return;
+            }
+    
+            // ファイルのMIMEタイプを取得
+            const fileType = file.type;
+    
+            // 画像ファイルの場合
+            if (fileType.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = "block"; // 画像を表示
+                    previewPDF.style.display = "none"; // PDFを非表示
+                    previewExcel.style.display = "none"; // Excelを非表示
+                };
+                reader.readAsDataURL(file);
+            }
+            // PDFファイルの場合
+            else if (fileType === "application/pdf") {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewPDF.src = e.target.result;
+                    previewPDF.style.display = "block"; // PDFを表示
+                    previewImage.style.display = "none"; // 画像を非表示
+                    previewExcel.style.display = "none"; // Excelを非表示
+                };
+                reader.readAsDataURL(file);
+            }
+            // Excelファイルの場合
+            else if (
+                file.name.endsWith(".xlsx") ||
+                file.name.endsWith(".xls")
+            ) {
+                previewImage.style.display = "none"; // 画像を非表示
+                previewPDF.style.display = "none"; // PDFを非表示
+                previewExcel.style.display = "block"; // Excelを表示
+    
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: "array" });
+                    const sheetName = workbook.SheetNames[0]; // 最初のシート
+                    const worksheet = workbook.Sheets[sheetName];
+                    const htmlTable = XLSX.utils.sheet_to_html(worksheet);
+                    previewExcel.innerHTML = htmlTable;
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            // 画像・PDF・Excel以外の場合 → すべて非表示
+            else {
+                previewImage.style.display = "none";
+                previewPDF.style.display = "none";
+                previewExcel.style.display = "none";
+            }
+        });
+        fileInput2.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+    
+            // 何も選択されていない場合はすべて非表示
+            if (!file) {
+                previewImage2.style.display = "none";
+                previewPDF2.style.display = "none";
+                previewExcel2.style.display = "none";
+                return;
+            }
+    
+            // ファイルのMIMEタイプを取得
+            const fileType = file.type;
+    
+            // 画像ファイルの場合
+            if (fileType.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage2.src = e.target.result;
+                    previewImage2.style.display = "block"; // 画像を表示
+                    previewPDF2.style.display = "none"; // PDFを非表示
+                    previewExcel2.style.display = "none"; // Excelを非表示
+                };
+                reader.readAsDataURL(file);
+            }
+            // PDFファイルの場合
+            else if (fileType === "application/pdf") {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewPDF2.src = e.target.result;
+                    previewPDF2.style.display = "block"; // PDFを表示
+                    previewImage2.style.display = "none"; // 画像を非表示
+                    previewExcel2.style.display = "none"; // Excelを非表示
+                };
+                reader.readAsDataURL(file);
+            }
+            // Excelファイルの場合
+            else if (
+                file.name.endsWith(".xlsx") ||
+                file.name.endsWith(".xls")
+            ) {
+                previewImage2.style.display = "none"; // 画像を非表示
+                previewPDF2.style.display = "none"; // PDFを非表示
+                previewExcel2.style.display = "block"; // Excelを表示
+    
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: "array" });
+                    const sheetName = workbook.SheetNames[0]; // 最初のシート
+                    const worksheet = workbook.Sheets[sheetName];
+                    const htmlTable = XLSX.utils.sheet_to_html(worksheet);
+                    previewExcel2.innerHTML = htmlTable;
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            // 画像・PDF・Excel以外の場合 → すべて非表示
+            else {
+                previewImage2.style.display = "none";
+                previewPDF2.style.display = "none";
+                previewExcel2.style.display = "none";
+            }
+        });
+        fileInput3.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+    
+            // 何も選択されていない場合はすべて非表示
+            if (!file) {
+                previewImage3.style.display = "none";
+                previewPDF3.style.display = "none";
+                previewExcel3.style.display = "none";
+                return;
+            }
+    
+            // ファイルのMIMEタイプを取得
+            const fileType = file.type;
+    
+            // 画像ファイルの場合
+            if (fileType.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage3.src = e.target.result;
+                    previewImage3.style.display = "block"; // 画像を表示
+                    previewPDF3.style.display = "none"; // PDFを非表示
+                    previewExcel3.style.display = "none"; // Excelを非表示
+                };
+                reader.readAsDataURL(file);
+            }
+            // PDFファイルの場合
+            else if (fileType === "application/pdf") {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewPDF3.src = e.target.result;
+                    previewPDF3.style.display = "block"; // PDFを表示
+                    previewImage3.style.display = "none"; // 画像を非表示
+                    previewExcel3.style.display = "none"; // Excelを非表示
+                };
+                reader.readAsDataURL(file);
+            }
+            // Excelファイルの場合
+            else if (
+                file.name.endsWith(".xlsx") ||
+                file.name.endsWith(".xls")
+            ) {
+                previewImage3.style.display = "none"; // 画像を非表示
+                previewPDF3.style.display = "none"; // PDFを非表示
+                previewExcel3.style.display = "block"; // Excelを表示
+    
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: "array" });
+                    const sheetName = workbook.SheetNames[0]; // 最初のシート
+                    const worksheet = workbook.Sheets[sheetName];
+                    const htmlTable = XLSX.utils.sheet_to_html(worksheet);
+                    previewExcel3.innerHTML = htmlTable;
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            // 画像・PDF・Excel以外の場合 → すべて非表示
+            else {
+                previewImage3.style.display = "none";
+                previewPDF3.style.display = "none";
+                previewExcel3.style.display = "none";
+            }
+        });
+    });
+</script>
+
+{% endblock %}
